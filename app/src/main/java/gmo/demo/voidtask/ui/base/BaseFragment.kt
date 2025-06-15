@@ -24,7 +24,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
     private var mActivity: gmo.demo.voidtask.ui.base.BaseAppCompatActivity? = null
     protected var mViewDataBinding: T? = null
         private set
-    private var mViewModel: V? = null
+    internal var mViewModel: V? = null
     private var mDialog: Dialog? = null
     private var isObserverSet = false
 
