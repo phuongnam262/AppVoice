@@ -56,6 +56,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeLis
                 navController.navigate(R.id.addVocabFragment)
             } else if (fragmentId == "learnVocabFragment") {
                 navController.navigate(R.id.learnVocabFragment)
+            } else if (fragmentId == "checkVocabFragment") {
+                navController.navigate(R.id.checkVocabFragment)
             }
         }
     }

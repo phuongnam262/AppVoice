@@ -16,6 +16,7 @@ import gmo.demo.voidtask.ui.main.MainScreenViewModelFactory
 import gmo.demo.voidtask.ui.splash.SplashViewModelFactory
 import gmo.demo.voidtask.ui.addVocab.AddVocabViewModelFactory
 import gmo.demo.voidtask.ui.learnVocab.LearnVocabViewModelFactory
+import gmo.demo.voidtask.ui.checkVocab.CheckVocabViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -68,6 +69,7 @@ class LockerApplication : Application(), KodeinAware {
         bind() from provider { MainScreenViewModelFactory() }
         bind() from provider { AddVocabViewModelFactory(instance()) }
         bind() from provider { LearnVocabViewModelFactory(instance()) }
+        bind() from provider { CheckVocabViewModelFactory(instance()) }
 
     }
 

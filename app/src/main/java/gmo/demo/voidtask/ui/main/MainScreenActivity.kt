@@ -39,6 +39,9 @@ class MainScreenActivity : BaseActivity<ActivityMainScreenBinding, MainScreenVie
         }
         mViewDataBinding?.btnKiemTra?.setOnClickListener {
             // Xử lý sự kiện "Kiểm tra"
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("navigateToFragment", "checkVocabFragment")
+            startActivity(intent)
         }
     }
 }

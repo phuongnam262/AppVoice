@@ -32,9 +32,9 @@
     <string name="file_content_empty">Nội dung file rỗng hoặc không hợp lệ.</string>
     <string name="error_reading_file">Lỗi khi đọc file.</string>
     <string name="error_saving_file">Lỗi khi lưu file vào cơ sở dữ liệu.</string>
-    <string name="no_vocab_found" >No vocab found.</string>
-    <string name="no_files_found" >No files found.</string>
-    <string name="error_loading_vocab" > Lỗi khi tải dữ liệu từ file.</string>
-    <string name="error_parsing_json" > Lỗi khi phân tích JSON.</string>
+    <string name="no_vocab_found">No vocab found.</string>
+    <string name="no_files_found">No files found.</string>
+    <string name="error_loading_vocab"> Lỗi khi tải dữ liệu từ file.</string>
+    <string name="error_parsing_json"> Lỗi khi phân tích JSON.</string>
 
 </resources>
