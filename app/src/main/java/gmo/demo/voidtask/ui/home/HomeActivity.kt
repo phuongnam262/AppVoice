@@ -17,6 +17,7 @@ import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeListener,
     KodeinAware {
@@ -52,12 +53,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeLis
         val navController = navHostFragment.navController
 
         intent.extras?.getString("navigateToFragment")?.let { fragmentId ->
+            val navOptions = androidx.navigation.navOptions {
+                popUpTo(R.id.addTaskFragment) {
+                    inclusive = true
+                }
+            }
             if (fragmentId == "addVocabFragment") {
-                navController.navigate(R.id.addVocabFragment)
+                navController.navigate(R.id.addVocabFragment, null, navOptions)
             } else if (fragmentId == "learnVocabFragment") {
-                navController.navigate(R.id.learnVocabFragment)
+                navController.navigate(R.id.learnVocabFragment, null, navOptions)
             } else if (fragmentId == "checkVocabFragment") {
-                navController.navigate(R.id.checkVocabFragment)
+                navController.navigate(R.id.checkVocabFragment, null, navOptions)
             }
         }
     }
