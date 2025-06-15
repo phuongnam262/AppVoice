@@ -15,6 +15,8 @@ import gmo.demo.voidtask.ui.base.BaseActivity
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeListener,
     KodeinAware {
@@ -44,6 +46,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeLis
         viewModel.homeListener = this
         if (!allRuntimePermissionsGranted()) {
             getRuntimePermissions()
+        }
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        intent.extras?.getString("navigateToFragment")?.let { fragmentId ->
+            if (fragmentId == "addVocabFragment") {
+                navController.navigate(R.id.addVocabFragment)
+            }
         }
     }
 

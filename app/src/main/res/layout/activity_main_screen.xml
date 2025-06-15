@@ -6,7 +6,7 @@
     </data>
     <LinearLayout
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="@dimen/dp_24"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
@@ -15,20 +15,20 @@
             android:id="@+id/btnNhapTuVung"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nhập từ vựng"
-            android:layout_marginBottom="16dp" />
+            android:text="@string/nhap_tu_vung"
+            android:layout_marginBottom="@dimen/dp_16" />
 
         <Button
             android:id="@+id/btnHocTuVung"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Học từ vựng"
-            android:layout_marginBottom="16dp" />
+            android:text="@string/hoc_tu_vung"
+            android:layout_marginBottom="@dimen/dp_16" />
 
         <Button
             android:id="@+id/btnKiemTra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kiểm tra" />
+            android:text="@string/kiem_tra" />
     </LinearLayout>
 </layout>

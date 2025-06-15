@@ -9,6 +9,8 @@ import gmo.demo.voidtask.ui.base.BaseActivity
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
+import android.content.Intent
+import gmo.demo.voidtask.ui.home.HomeActivity
 
 class MainScreenActivity : BaseActivity<ActivityMainScreenBinding, MainScreenViewModel>(), KodeinAware {
     override val kodein by kodein()
@@ -25,7 +27,9 @@ class MainScreenActivity : BaseActivity<ActivityMainScreenBinding, MainScreenVie
         // Thiết lập listener cho các nút nếu cần
         mViewDataBinding?.btnNhapTuVung?.setOnClickListener {
             // Xử lý sự kiện "Nhập từ vựng"
-            // Ví dụ: startActivity(Intent(this, NhapTuVungActivity::class.java))
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("navigateToFragment", "addVocabFragment")
+            startActivity(intent)
         }
         mViewDataBinding?.btnHocTuVung?.setOnClickListener {
             // Xử lý sự kiện "Học từ vựng"

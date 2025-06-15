@@ -9,4 +9,9 @@
         android:name="gmo.demo.voidtask.ui.addtask.AddTaskFragment"
         android:label="fragment_add_task"
         tools:layout="@layout/fragment_add_task" />
+    <fragment
+        android:id="@+id/addVocabFragment"
+        android:name="gmo.demo.voidtask.ui.addVocab.AddVocabFragment"
+        android:label="fragment_add_vocab"
+        tools:layout="@layout/fragment_add_vocab" />
 </navigation>
