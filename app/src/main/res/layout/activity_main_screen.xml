@@ -1,0 +1,34 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewmodel"
+            type="gmo.demo.voidtask.ui.main.MainScreenViewModel" />
+    </data>
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnNhapTuVung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nhập từ vựng"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnHocTuVung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Học từ vựng"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnKiemTra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kiểm tra" />
+    </LinearLayout>
+</layout>

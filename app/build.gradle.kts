@@ -1,43 +1,59 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.kapt")
 }
 
 android {
-    namespace = "com.lock.smartlocker"
-    compileSdk = 34
-
-    signingConfigs {
-        create("release") {
-            keyAlias = "smart locker"
-            keyPassword = "spz@123456"
-            storeFile = file("smartlock.keystore")
-            storePassword = "spz@123456"
-        }
-    }
+    namespace = "gmo.demo.voidtask"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.lock.smartlocker"
+        applicationId = "gmo.demo.voidtask"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file("my-release-key.jks")
+            storePassword = "password"
+            keyAlias = "my_key_alias"
+            keyPassword = "password"
+        }
+    }
 
     buildTypes {
         release {
             isMinifyEnabled = false
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isMinifyEnabled = false
+        }
+        create("develop") {
+            initWith(getByName("debug")) // Inherit from debug
+            isDebuggable = true
+            applicationIdSuffix = ".dev"
+            buildConfigField("String", "API_URL", "\"http://118.69.77.23:3002/\"")
+        }
+        create("staging") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".staging"
+            buildConfigField("String", "API_URL", "\"http://118.69.77.23:3002/\"")
+        }
+        create("honban") {
+            initWith(getByName("release"))
+            buildConfigField("String", "API_URL", "\"http://118.69.77.23:3002/\"")
         }
     }
     compileOptions {
@@ -52,16 +68,9 @@ android {
         dataBinding = true
         buildConfig = true
     }
-
-    externalNativeBuild {
-        ndkBuild {
-            path("src/main/jni/Android.mk")
-        }
-    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -72,13 +81,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // Face features
-    implementation(libs.face.detection)
-    implementation(libs.guava)
-    implementation(libs.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.preference.ktx)
+    implementation (libs.androidx.preference.ktx.v120)
 
     //Retrofit and GSON
     implementation(libs.retrofit)
@@ -89,7 +93,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     //Kotlin Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -109,7 +113,6 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx.v277)
     implementation(libs.androidx.navigation.ui.ktx.v277)
 
-    implementation(libs.androidx.preference.ktx)
     //Groupie
     implementation (libs.github.groupie)
     implementation (libs.groupie.viewbinding)
@@ -117,13 +120,9 @@ dependencies {
 
     //Glide
     implementation (libs.glide)
-    kapt (libs.compiler)
-
-    implementation (libs.androidx.preference.ktx.v120)
+    ksp(libs.compiler)
 
     // encrypt
     implementation (libs.androidx.security.crypto)
 
-    // kiosk mode
-    implementation(files("libs/RocoApiManager.jar"))
 }

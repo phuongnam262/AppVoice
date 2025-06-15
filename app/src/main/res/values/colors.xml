@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#2196F3</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhite40">#66FFFFFF</color>
@@ -11,17 +12,17 @@
     <color name="colorBlue">#0A43EC</color>
 
     <!-- Color text-->
-    <color name="text_label">#BF090909</color>
-    <color name="text_color">#252525</color>
-    <color name="text_sub_color">#494848</color>
+    <color name="text_title">#2196F3</color>
+    <color name="text_color">#333333</color>
+    <color name="text_color_0">#717171</color>
+    <color name="text_color_1">#FF5722</color>
+    <color name="text_color_2">#FFC107</color>
+    <color name="text_color_3">#FFA3A3</color>
     <color name="text_color_hint">#919090</color>
-    <color name="text_color_error">#FF3945</color>
-    <color name="text_thank_success">#8F3D58</color>
+    <color name="text_sub_color">#919090</color>
 
-    <color name="grey7A7A7A">#7A7A7A</color>
-    <color name="grey575757">#575757</color>
-    <color name="greyF4F4F4">#F4F4F4</color>
-    <color name="greyF9F9F9">#F9F9F9</color>
-    <color name="green009C2C">#009C2C</color>
-    <color name="redD0000E">#D0000E</color>
+    <!-- Color BG-->
+    <color name="bg_radius">#EEF7FE</color>
+    <color name="border_color">#DCE4EA</color>
+
 </resources>

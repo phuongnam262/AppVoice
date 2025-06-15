@@ -1,16 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.SmartLocker" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.App" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorBlack</item>
-        <item name="colorPrimaryVariant">@color/colorBlack</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorBlue</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/colorBlack</item>
         <item name="colorSecondaryVariant">@color/colorBlack</item>
         <item name="colorOnSecondary">@color/colorBlack</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -19,7 +19,7 @@
 
     </style>
     <!-- Base application theme. -->
-    <style name="Base.Theme.SmartLocker" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.App" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>

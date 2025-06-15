@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.lock.smartlocker.ui.splash.SplashViewModel" />
+            type="gmo.demo.voidtask.ui.splash.SplashViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,16 +17,17 @@
         android:background="@color/colorWhite"
         tools:context=".ui.home.HomeActivity">
 
-        <ImageView
+        <TextView
             android:id="@+id/iv_logo"
-            android:layout_width="@dimen/dp_400"
-            android:layout_height="@dimen/dp_200"
-            android:scaleType="fitCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/icon_start_logo" />
+            android:text="BaseSource"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/sp_40"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

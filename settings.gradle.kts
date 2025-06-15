@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SmartLocker"
+rootProject.name = "VoidTask"
 include(":app")
  
