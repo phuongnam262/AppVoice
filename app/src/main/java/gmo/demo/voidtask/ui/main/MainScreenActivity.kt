@@ -33,6 +33,9 @@ class MainScreenActivity : BaseActivity<ActivityMainScreenBinding, MainScreenVie
         }
         mViewDataBinding?.btnHocTuVung?.setOnClickListener {
             // Xử lý sự kiện "Học từ vựng"
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.putExtra("navigateToFragment", "learnVocabFragment")
+            startActivity(intent)
         }
         mViewDataBinding?.btnKiemTra?.setOnClickListener {
             // Xử lý sự kiện "Kiểm tra"

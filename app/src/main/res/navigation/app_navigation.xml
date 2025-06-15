@@ -14,4 +14,9 @@
         android:name="gmo.demo.voidtask.ui.addVocab.AddVocabFragment"
         android:label="fragment_add_vocab"
         tools:layout="@layout/fragment_add_vocab" />
+    <fragment
+        android:id="@+id/learnVocabFragment"
+        android:name="gmo.demo.voidtask.ui.learnVocab.LearnVocabFragment"
+        android:label="fragment_learn_vocab"
+        tools:layout="@layout/fragment_learn_vocab" />
 </navigation>
