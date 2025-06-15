@@ -13,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import android.util.Log
 import gmo.demo.voidtask.ui.base.BaseFragment
 import gmo.demo.voidtask.BR
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +27,9 @@ private const val ARG_PARAM2 = "param2"
  * Use the [AddVocabFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel>() {
+class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel>(), KodeinAware {
+    override val kodein by kodein()
+    private val factory: AddVocabViewModelFactory by instance()
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,13 +39,17 @@ class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel
     override val bindingVariable: Int
         get() = BR.viewModel
     override val viewModel: AddVocabViewModel by lazy {
-        ViewModelProvider(this, AddVocabViewModelFactory())[AddVocabViewModel::class.java]
+        ViewModelProvider(this, factory)[AddVocabViewModel::class.java]
     }
 
     private val pickFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val uri = it.data?.data
             viewModel.onFileSelected(uri)
+            uri?.let { fileUri ->
+                val fileName = fileUri.lastPathSegment ?: "unknown_file"
+                mViewModel?.saveFileToDatabase(fileName, fileUri, requireContext().contentResolver)
+            }
         }
     }
 

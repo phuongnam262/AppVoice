@@ -7,13 +7,14 @@ import androidx.room.RoomDatabase
 import gmo.demo.voidtask.data.models.Task
 
 @Database(
-    entities = [Task::class],
+    entities = [Task::class, FileEntry::class],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun taskDAO(): TaskDAO
+    abstract fun getFileEntryDao(): FileEntryDao
 
     companion object {
 
@@ -31,7 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "Database.db"
-            ).allowMainThreadQueries().build()
+                "voidtask.db"
+            ).build()
     }
 }

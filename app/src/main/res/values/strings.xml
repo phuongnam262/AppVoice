@@ -14,7 +14,7 @@
 
     <string name="enter_otp_verify">Enter the OTP sent to your device to verify your account.</string>
     <string name="enter_otp">Enter OTP:</string>
-    <string name="submit_otp_button">Submit OTP</string>
+    <string name="submit_otp_button">Xác nhận</string>
     <string name="error_invalid_otp">Invalid OTP. Please try again or request a new OTP</string>
     <string name="error_otp_emplty">Please enter OTP</string>
     <string name="error_null"> </string>
@@ -28,5 +28,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="file_saved_successfully">File đã được lưu vào cơ sở dữ liệu thành công!</string>
+    <string name="file_content_empty">Nội dung file rỗng hoặc không hợp lệ.</string>
+    <string name="error_reading_file">Lỗi khi đọc file.</string>
+    <string name="error_saving_file">Lỗi khi lưu file vào cơ sở dữ liệu.</string>
 
 </resources>

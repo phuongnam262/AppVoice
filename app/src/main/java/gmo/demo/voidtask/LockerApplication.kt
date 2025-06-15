@@ -14,6 +14,7 @@ import gmo.demo.voidtask.ui.addtask.AddTaskViewModelFactory
 import gmo.demo.voidtask.ui.home.HomeViewModelFactory
 import gmo.demo.voidtask.ui.main.MainScreenViewModelFactory
 import gmo.demo.voidtask.ui.splash.SplashViewModelFactory
+import gmo.demo.voidtask.ui.addVocab.AddVocabViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -50,6 +51,7 @@ class LockerApplication : Application(), KodeinAware {
         bind() from singleton { NetworkConnectionInterceptor(instance()) }
         bind() from singleton { AppAPI.createRetrofit(instance()) }
         bind() from singleton { AppDatabase(instance()) }
+        bind() from singleton { instance<AppDatabase>().getFileEntryDao() }
 
         //bind Service
         bind() from provider { AppServives.create(instance()) }
@@ -63,6 +65,7 @@ class LockerApplication : Application(), KodeinAware {
         bind() from provider { HomeViewModelFactory() }
         bind() from provider { AddTaskViewModelFactory(instance()) }
         bind() from provider { MainScreenViewModelFactory() }
+        bind() from provider { AddVocabViewModelFactory(instance()) }
 
     }
 
