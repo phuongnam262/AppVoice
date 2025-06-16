@@ -19,8 +19,10 @@ import java.util.*
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+
 import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AppCompatActivity
+
 
 class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel() {
 
@@ -39,7 +41,9 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     private var speechRecognizer: SpeechRecognizer? = null
     private var timer: Timer? = null
     private var seconds: Int = 0
+
     private var recordedText: String = ""
+
 
     // Speech Recognition setup
     fun setupSpeechRecognizer(context: Context) {
@@ -53,12 +57,15 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     private fun createRecognitionListener(context: Context) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {
             speechStatus.postValue(context.getString(R.string.listening))
+
             showWaveAnimation.postValue(true)
         }
 
         override fun onBeginningOfSpeech() {
             speechStatus.postValue(context.getString(R.string.speaking))
+
             showWaveAnimation.postValue(true)
+
         }
 
         override fun onRmsChanged(rmsdB: Float) {}
@@ -66,6 +73,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         override fun onBufferReceived(buffer: ByteArray?) {}
 
         override fun onEndOfSpeech() {
+
             stopTimer()
             showWaveAnimation.postValue(false)
         }
@@ -109,6 +117,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     }
 
     // Recording control
+
     fun toggleRecording(context: Context) {
         if (isRecording.value == true) {
             stopRecording()
@@ -129,6 +138,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     }
 
     internal fun startRecording(context: Context) {
+      
         if (!checkAudioPermission(context)) {
             speechStatus.postValue(context.getString(R.string.permission_required))
             return
@@ -138,6 +148,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             speechStatus.postValue(context.getString(R.string.no_words_to_check))
             return
         }
+
 
         resetSpeechStatus()
         recordedText = ""
@@ -160,6 +171,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             speechRecognizer?.startListening(intent)
         } catch (e: Exception) {
             stopRecording()
+
             setupSpeechRecognizer(context)
         }
     }
@@ -170,6 +182,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
         isRecording.value = false
         showWaveAnimation.value = false
         stopTimer()
@@ -203,6 +216,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         val userText = spokenText.lowercase().trim()
 
         val result = if (userText.contains(currentWord)) {
+
             stopTimer()
             "✅ ${context.getString(R.string.correct_pronunciation)}"
         } else {
@@ -222,6 +236,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
     }
+
 
     fun resetSpeechStatus() {
         speechStatus.postValue("")
@@ -300,6 +315,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     fun showPreviousCard() {
         if (vocabList.isNotEmpty()) {
+
             // Reset tất cả trạng thái
             stopRecording()
             resetSpeechStatus()
@@ -320,6 +336,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             currentFrontText.value = currentCard.first
             currentBackText.value = currentCard.second
             isCardFlipped.value = true
+
         }
     }
 
@@ -337,3 +354,4 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         const val PERMISSION_REQUEST_RECORD_AUDIO = 1001
     }
 } 
+

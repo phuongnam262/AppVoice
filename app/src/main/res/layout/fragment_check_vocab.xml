@@ -70,6 +70,7 @@
             app:layout_constraintTop_toBottomOf="@id/cardVocab"/>
 
         <!-- Recording Time -->
+
         <TextView
             android:id="@+id/tvRecordingTime"
             android:layout_width="wrap_content"
@@ -89,6 +90,7 @@
             android:layout_height="50dp"
             android:background="@drawable/circle_mic_bg"
             android:src="@{viewModel.isRecording ? @drawable/ic_mic_off : @drawable/ic_mic}"
+
             android:onClick="@{() -> viewModel.toggleRecording(context)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +101,7 @@
             android:id="@+id/tvSpeechStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@{viewModel.speechStatus}"
@@ -121,6 +124,7 @@
                 android:layout_weight="1"
                 android:text="@string/previous"
                 android:onClick="@{() -> viewModel.showPreviousCard()}" />
+
 
             <Button
                 android:id="@+id/btnNext"

@@ -38,7 +38,7 @@
     <string name="error_parsing_json"> Lỗi khi phân tích JSON.</string>
 
     <string name="tts_language_not_supported">Text-to-speech language not supported</string>
-    <string name="tts_initialization_failed">Failed to initialize text-to-speech</string>
+    <string name="tts_initialization_failed">Failed to initialize text-to-speech</string>/>
 
     <!-- Speech Recognition -->
     <string name="listening">Đang lắng nghe...</string>
