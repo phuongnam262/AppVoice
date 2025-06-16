@@ -51,6 +51,7 @@ class LearnVocabFragment : BaseFragment<FragmentLearnVocabBinding, LearnVocabVie
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.initTextToSpeech(requireContext())
         viewModel.loadVocabFromFile() // Tải dữ liệu khi Fragment được tạo
 
         mViewDataBinding?.cardVocab?.setOnClickListener {

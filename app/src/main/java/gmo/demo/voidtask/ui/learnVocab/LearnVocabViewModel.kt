@@ -1,5 +1,7 @@
 package gmo.demo.voidtask.ui.learnVocab
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import gmo.demo.voidtask.R
@@ -8,6 +10,7 @@ import gmo.demo.voidtask.ui.base.BaseViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
+import java.util.*
 
 class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel() {
 
@@ -17,6 +20,33 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     private var vocabList: List<Pair<String, String>> = emptyList()
     private var currentIndex: Int = 0
+    private var textToSpeech: TextToSpeech? = null
+
+    fun initTextToSpeech(context: Context) {
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val result = textToSpeech?.setLanguage(Locale.US)
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    mMessage.postValue(R.string.tts_language_not_supported)
+                }
+            } else {
+                mMessage.postValue(R.string.tts_initialization_failed)
+            }
+        }
+    }
+
+    fun speakCurrentWord() {
+        val text = currentFrontText.value
+        if (text != null) {
+            textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+    }
 
     fun loadVocabFromFile() {
         viewModelScope.launch {

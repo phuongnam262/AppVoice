@@ -47,6 +47,20 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
+                <ImageButton
+                    android:id="@+id/btn_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_speaker"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/dp_8"
+                    android:onClick="@{() -> viewModel.speakCurrentWord()}"
+                    android:layout_marginTop="@dimen/dp_100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
                 <TextView
                     android:id="@+id/tv_back_text"
                     android:layout_width="wrap_content"
