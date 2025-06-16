@@ -10,6 +10,9 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import androidx.lifecycle.ViewModelProvider
+import android.Manifest
+import android.content.pm.PackageManager
+import android.widget.Toast
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,6 +67,29 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
                 // Hiển thị mặt trước (tiếng Anh)
                 mViewDataBinding?.tvFrontText?.visibility = View.VISIBLE
                 mViewDataBinding?.tvBackText?.visibility = View.GONE
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CheckVocabViewModel.PERMISSION_REQUEST_RECORD_AUDIO -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Quyền được cấp, bắt đầu ghi âm
+                    viewModel.startRecording(requireContext())
+                } else {
+                    // Quyền bị từ chối, hiển thị thông báo
+                    Toast.makeText(
+                        requireContext(),
+                        "Cần quyền ghi âm để sử dụng tính năng này",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }

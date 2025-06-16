@@ -40,4 +40,21 @@
     <string name="tts_language_not_supported">Text-to-speech language not supported</string>
     <string name="tts_initialization_failed">Failed to initialize text-to-speech</string>
 
+    <!-- Speech Recognition -->
+    <string name="listening">Đang lắng nghe...</string>
+    <string name="speaking">Đang nói...</string>
+    <string name="speak_now">Hãy nói từ cần kiểm tra</string>
+    <string name="correct_pronunciation">Phát âm chính xác!</string>
+    <string name="wrong_pronunciation">Phát âm chưa chính xác</string>
+    <string name="expected">Từ cần phát âm</string>
+    <string name="your_pronunciation">Bạn đã phát âm</string>
+    <string name="no_match">Không nhận diện được giọng nói</string>
+    <string name="permission_required">Cần cấp quyền ghi âm</string>
+    <string name="no_words_to_check">Không có từ nào để kiểm tra</string>
+    <string name="speech_recognition_not_available">Không thể sử dụng nhận diện giọng nói</string>
+
+    <!-- Navigation -->
+    <string name="previous">Trước</string>
+    <string name="next">Tiếp</string>
+
 </resources>
