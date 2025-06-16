@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import java.util.*
+import java.util.regex.Pattern
 
 class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel() {
 
@@ -25,19 +26,36 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     fun initTextToSpeech(context: Context) {
         textToSpeech = TextToSpeech(context) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                val result = textToSpeech?.setLanguage(Locale.US)
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    mMessage.postValue(R.string.tts_language_not_supported)
-                }
+                // Set default language to English
+                textToSpeech?.setLanguage(Locale.US)
             } else {
                 mMessage.postValue(R.string.tts_initialization_failed)
             }
         }
     }
 
+    private fun isEnglishText(text: String): Boolean {
+        // Pattern to match English text (letters, numbers, and common punctuation)
+        val englishPattern = Pattern.compile("^[a-zA-Z0-9\\s.,!?'\"()-]+$")
+        return englishPattern.matcher(text).matches()
+    }
+
     fun speakCurrentWord() {
-        val text = currentFrontText.value
+        val text = if (isCardFlipped.value == true) {
+            currentBackText.value
+        } else {
+            currentFrontText.value
+        }
+        
         if (text != null) {
+            // Set language based on text content
+            val locale = if (isEnglishText(text)) {
+                Locale.US
+            } else {
+                Locale("vi", "VN")
+            }
+            
+            textToSpeech?.setLanguage(locale)
             textToSpeech?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
         }
     }
