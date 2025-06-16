@@ -40,24 +40,21 @@
     <string name="tts_language_not_supported">Text-to-speech language not supported</string>
     <string name="tts_initialization_failed">Failed to initialize text-to-speech</string>/>
 
-    <string name="listening">Listening...</string>
-    <string name="speaking">Speak now</string>
-    <string name="audio_error">Audio recording error</string>
-    <string name="client_error">Client side error</string>
-    <string name="permission_error">Insufficient permissions</string>
-    <string name="network_timeout">Network timeout</string>
-    <string name="no_match">No speech recognized</string>
-    <string name="recognizer_busy">RecognitionService busy</string>
-    <string name="speech_timeout">No speech input</string>
-    <string name="unknown_error">Unknown error occurred</string>
-    <string name="no_words_to_check">No words to check</string>
-    <string name="speech_recognition_not_available">Speech recognition not available</string>
-    <string name="permission_required">Microphone permission required</string>
-    <string name="speak_now">Speak now</string>
-    <string name="previous">Previous</string>
-    <string name="next">Next</string>
+    <!-- Speech Recognition -->
+    <string name="listening">Đang lắng nghe...</string>
+    <string name="speaking">Đang nói...</string>
+    <string name="speak_now">Hãy nói từ cần kiểm tra</string>
     <string name="correct_pronunciation">Phát âm chính xác!</string>
-    <string name="wrong_pronunciation">Phát âm không chính xác</string>
-    <string name="expected">Từ mong đợi:</string>
-    <string name="your_pronunciation">Bạn nói:</string>
+    <string name="wrong_pronunciation">Phát âm chưa chính xác</string>
+    <string name="expected">Từ cần phát âm</string>
+    <string name="your_pronunciation">Bạn đã phát âm</string>
+    <string name="no_match">Không nhận diện được giọng nói</string>
+    <string name="permission_required">Cần cấp quyền ghi âm</string>
+    <string name="no_words_to_check">Không có từ nào để kiểm tra</string>
+    <string name="speech_recognition_not_available">Không thể sử dụng nhận diện giọng nói</string>
+
+    <!-- Navigation -->
+    <string name="previous">Trước</string>
+    <string name="next">Tiếp</string>
+
 </resources>
