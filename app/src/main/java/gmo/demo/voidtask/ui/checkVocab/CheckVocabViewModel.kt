@@ -53,10 +53,12 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     private fun createRecognitionListener(context: Context) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {
             speechStatus.postValue(context.getString(R.string.listening))
+            showWaveAnimation.postValue(true)
         }
 
         override fun onBeginningOfSpeech() {
             speechStatus.postValue(context.getString(R.string.speaking))
+            showWaveAnimation.postValue(true)
         }
 
         override fun onRmsChanged(rmsdB: Float) {}
@@ -64,12 +66,13 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         override fun onBufferReceived(buffer: ByteArray?) {}
 
         override fun onEndOfSpeech() {
-            // Khi người dùng ngừng nói, dừng timer
             stopTimer()
+            showWaveAnimation.postValue(false)
         }
 
         override fun onError(error: Int) {
             stopTimer()
+            showWaveAnimation.postValue(false)
             when (error) {
                 SpeechRecognizer.ERROR_NO_MATCH -> {
                     // Nếu không nhận dạng được, vẫn hiển thị kết quả sai
@@ -85,6 +88,8 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
 
         override fun onResults(results: Bundle?) {
+            stopTimer()
+            showWaveAnimation.postValue(false)
             results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let { matches ->
                 if (matches.isNotEmpty()) {
                     recordedText = matches[0]

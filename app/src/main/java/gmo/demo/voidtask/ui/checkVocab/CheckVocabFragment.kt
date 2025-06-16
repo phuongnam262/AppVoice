@@ -12,6 +12,7 @@ import org.kodein.di.generic.instance
 import androidx.lifecycle.ViewModelProvider
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.drawable.AnimationDrawable
 import android.widget.Toast
 
 // TODO: Rename parameter arguments, choose names that match
@@ -57,6 +58,17 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
         mViewDataBinding?.cardVocab?.setOnClickListener {
             viewModel.flipCard()
         }
+
+        viewModel.showWaveAnimation.observe(viewLifecycleOwner) { show ->
+            mViewDataBinding?.ivWaveAnimation?.let { imageView ->
+                if (show) {
+                    (imageView.drawable as? AnimationDrawable)?.start()
+                } else {
+                    (imageView.drawable as? AnimationDrawable)?.stop()
+                }
+            }
+        }
+
 
         viewModel.isCardFlipped.observe(viewLifecycleOwner) {
             if (it) {
