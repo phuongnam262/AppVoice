@@ -1,7 +1,12 @@
 package gmo.demo.voidtask.ui.checkVocab
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import gmo.demo.voidtask.R
 import gmo.demo.voidtask.databinding.FragmentCheckVocabBinding
 import gmo.demo.voidtask.ui.base.BaseFragment
@@ -9,18 +14,11 @@ import gmo.demo.voidtask.BR
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-import androidx.lifecycle.ViewModelProvider
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private const val REQUEST_RECORD_AUDIO_PERMISSION = 101
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CheckVocabFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabViewModel>(), KodeinAware {
     override val kodein by kodein()
 
@@ -34,7 +32,6 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
         ViewModelProvider(this, factory)[CheckVocabViewModel::class.java]
     }
 
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -49,35 +46,137 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadVocabFromFile() // Tải dữ liệu khi Fragment được tạo
+        // Khởi tạo speech recognizer
+        viewModel.setupSpeechRecognizer(requireContext())
 
+        // Tải dữ liệu từ file
+        viewModel.loadVocabFromFile()
+
+        setupUIListeners()
+        setupObservers()
+    }
+
+    private fun setupUIListeners() {
+        // Xử lý sự kiện lật thẻ
         mViewDataBinding?.cardVocab?.setOnClickListener {
             viewModel.flipCard()
         }
 
-        viewModel.isCardFlipped.observe(viewLifecycleOwner) {
-            if (it) {
-                // Hiển thị mặt sau (tiếng Việt)
-                mViewDataBinding?.tvFrontText?.visibility = View.GONE
-                mViewDataBinding?.tvBackText?.visibility = View.VISIBLE
+        // Xử lý sự kiện nút mic
+        mViewDataBinding?.btnMic?.setOnClickListener {
+            if (checkAudioPermission()) {
+                toggleRecording()
             } else {
-                // Hiển thị mặt trước (tiếng Anh)
-                mViewDataBinding?.tvFrontText?.visibility = View.VISIBLE
-                mViewDataBinding?.tvBackText?.visibility = View.GONE
+                requestAudioPermission()
+            }
+        }
+
+        // Xử lý sự kiện nút next/previous
+        mViewDataBinding?.btnNext?.setOnClickListener {
+            viewModel.showNextCard()
+        }
+
+        mViewDataBinding?.btnPrevious?.setOnClickListener {
+            viewModel.showPreviousCard()
+        }
+    }
+
+    private fun setupObservers() {
+        // Quan sát trạng thái lật thẻ
+        viewModel.isCardFlipped.observe(viewLifecycleOwner) { isFlipped ->
+            mViewDataBinding?.tvFrontText?.visibility = if (isFlipped) View.GONE else View.VISIBLE
+            mViewDataBinding?.tvBackText?.visibility = if (isFlipped) View.VISIBLE else View.GONE
+        }
+
+        // Quan sát trạng thái ghi âm
+        viewModel.isRecording.observe(viewLifecycleOwner) { isRecording ->
+            updateMicButtonState(isRecording)
+            updateRecordingUI(isRecording)
+        }
+
+        // Quan sát trạng thái animation
+        viewModel.showWaveAnimation.observe(viewLifecycleOwner) { showAnimation ->
+            mViewDataBinding?.ivWaveAnimation?.apply {
+                visibility = if (showAnimation) View.VISIBLE else View.GONE
+                if (showAnimation) {
+                    (drawable as? android.graphics.drawable.AnimationDrawable)?.start()
+                } else {
+                    (drawable as? android.graphics.drawable.AnimationDrawable)?.stop()
+                }
+            }
+        }
+
+        // Quan sát thời gian ghi âm
+        viewModel.recordingTime.observe(viewLifecycleOwner) { time ->
+            mViewDataBinding?.tvRecordingTime?.text = time
+        }
+
+        // Quan sát kết quả nhận diện giọng nói
+        viewModel.speechStatus.observe(viewLifecycleOwner) { status ->
+            mViewDataBinding?.tvSpeechStatus?.text = status
+        }
+    }
+
+    private fun updateMicButtonState(isRecording: Boolean) {
+        mViewDataBinding?.btnMic?.apply {
+            setImageResource(
+                if (isRecording) R.drawable.ic_mic_off else R.drawable.ic_mic
+            )
+            animate().scaleX(if (isRecording) 1.2f else 1f)
+                .scaleY(if (isRecording) 1.2f else 1f)
+                .setDuration(300)
+                .start()
+        }
+    }
+
+    private fun updateRecordingUI(isRecording: Boolean) {
+        mViewDataBinding?.tvRecordingTime?.visibility =
+            if (isRecording) View.VISIBLE else View.GONE
+    }
+
+    private fun toggleRecording() {
+        if (viewModel.isRecording.value == true) {
+            viewModel.stopRecording()
+        } else {
+            viewModel.startRecording(requireContext())
+        }
+    }
+
+    private fun checkAudioPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestAudioPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            REQUEST_RECORD_AUDIO_PERMISSION
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                viewModel.startRecording(requireContext())
+            } else {
+                viewModel.speechStatus.postValue(getString(R.string.permission_required))
             }
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.stopRecording()
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CheckVocabFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             CheckVocabFragment().apply {
