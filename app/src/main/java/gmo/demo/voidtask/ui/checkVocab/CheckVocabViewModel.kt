@@ -63,13 +63,20 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
         override fun onBufferReceived(buffer: ByteArray?) {}
 
-        override fun onEndOfSpeech() {}
+        override fun onEndOfSpeech() {
+            // Khi người dùng ngừng nói, dừng timer
+            stopTimer()
+        }
 
         override fun onError(error: Int) {
             stopTimer()
             when (error) {
                 SpeechRecognizer.ERROR_NO_MATCH -> {
-                    speechStatus.postValue(context.getString(R.string.no_match))
+                    // Nếu không nhận dạng được, vẫn hiển thị kết quả sai
+                    val currentWord = currentFrontText.value?.lowercase()?.trim() ?: ""
+                    speechStatus.postValue("❌ ${context.getString(R.string.wrong_pronunciation)}\n" +
+                            "${context.getString(R.string.expected)}: $currentWord\n" +
+                            "${context.getString(R.string.your_pronunciation)}: Không nhận dạng được")
                 }
                 else -> {
                     resetSpeechStatus()
@@ -82,6 +89,12 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
                 if (matches.isNotEmpty()) {
                     recordedText = matches[0]
                     checkPronunciation(recordedText, context)
+                } else {
+                    // Nếu không có kết quả, vẫn hiển thị kết quả sai
+                    val currentWord = currentFrontText.value?.lowercase()?.trim() ?: ""
+                    speechStatus.postValue("❌ ${context.getString(R.string.wrong_pronunciation)}\n" +
+                            "${context.getString(R.string.expected)}: $currentWord\n" +
+                            "${context.getString(R.string.your_pronunciation)}: Không nhận dạng được")
                 }
             }
         }
