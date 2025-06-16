@@ -1,25 +1,18 @@
 package gmo.demo.voidtask.ui.checkVocab
 
-import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.View
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import gmo.demo.voidtask.BR
 import gmo.demo.voidtask.R
 import gmo.demo.voidtask.databinding.FragmentCheckVocabBinding
 import gmo.demo.voidtask.ui.base.BaseFragment
-import gmo.demo.voidtask.BR
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
-
-import androidx.lifecycle.ViewModelProvider
-import android.Manifest
-import android.content.pm.PackageManager
-import android.graphics.drawable.AnimationDrawable
-import android.widget.Toast
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -85,36 +78,33 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
                 // Hiển thị mặt sau (tiếng Việt)
                 mViewDataBinding?.tvFrontText?.visibility = View.GONE
                 mViewDataBinding?.tvBackText?.visibility = View.VISIBLE
-              
             } else {
                 viewModel.speechStatus.postValue(getString(R.string.permission_required))
             }
         }
     }
 
-override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<out String>,
-    grantResults: IntArray
-) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    when (requestCode) {
-        CheckVocabViewModel.PERMISSION_REQUEST_RECORD_AUDIO -> {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Quyền được cấp, bắt đầu ghi âm
-                viewModel.startRecording(requireContext())
-            } else {
-                // Quyền bị từ chối, hiển thị thông báo
-                Toast.makeText(
-                    requireContext(),
-                    "Cần quyền ghi âm để sử dụng tính năng này",
-                    Toast.LENGTH_SHORT
-                ).show()
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CheckVocabViewModel.PERMISSION_REQUEST_RECORD_AUDIO -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Quyền được cấp, bắt đầu ghi âm
+                    viewModel.startRecording(requireContext())
+                } else {
+                    // Quyền bị từ chối, hiển thị thông báo
+                    Toast.makeText(
+                        requireContext(),
+                        "Cần quyền ghi âm để sử dụng tính năng này",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
-    }
-}
-
     }
 
     companion object {

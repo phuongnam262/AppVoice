@@ -93,7 +93,7 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
     /**
      * Handling show loading icon, message for fragment
      */
-    private fun setupObservers() {
+    internal fun setupObservers() {
         activity?.let { activity ->
             if (isObserverSet.not()) {
                 mViewModel?.mLoading?.observe(activity) {
