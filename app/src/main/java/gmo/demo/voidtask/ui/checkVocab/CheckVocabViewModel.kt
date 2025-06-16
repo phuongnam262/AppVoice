@@ -146,6 +146,10 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
     }
 
+    fun resetSpeechStatus() {
+        speechStatus.postValue("") // Reset về trạng thái rỗng
+    }
+
     private fun stopTimer() {
         timer?.cancel()
         timer = null
@@ -241,6 +245,8 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     fun showPreviousCard() {
         if (vocabList.isNotEmpty()) {
+            resetSpeechStatus()
+            resetSpeechStatus()
             currentIndex = (currentIndex - 1 + vocabList.size) % vocabList.size
             updateCardContent()
         }
@@ -248,6 +254,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     private fun updateCardContent() {
         if (vocabList.isNotEmpty()) {
+            resetSpeechStatus()
             val currentCard = vocabList[currentIndex]
             currentFrontText.value = currentCard.first
             currentBackText.value = currentCard.second

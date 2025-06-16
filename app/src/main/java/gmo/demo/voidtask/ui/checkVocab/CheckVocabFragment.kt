@@ -86,6 +86,9 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
         viewModel.isCardFlipped.observe(viewLifecycleOwner) { isFlipped ->
             mViewDataBinding?.tvFrontText?.visibility = if (isFlipped) View.GONE else View.VISIBLE
             mViewDataBinding?.tvBackText?.visibility = if (isFlipped) View.VISIBLE else View.GONE
+            if (isFlipped) {
+                viewModel.resetSpeechStatus() // Reset thông báo khi flip card
+            }
         }
 
         // Quan sát trạng thái ghi âm
