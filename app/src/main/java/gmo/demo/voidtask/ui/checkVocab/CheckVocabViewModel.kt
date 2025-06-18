@@ -19,19 +19,16 @@ import java.util.*
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-
 import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AppCompatActivity
-
 
 class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel() {
 
     // LiveData for UI
     val currentFrontText = MutableLiveData<String>()
     val currentBackText = MutableLiveData<String>()
-    val isCardFlipped = MutableLiveData<Boolean>().apply { value = true }
+    val isCardFlipped = MutableLiveData<Boolean>().apply { value = false }
     val speechStatus = MutableLiveData<String>()
-    val recordingTime = MutableLiveData<String>().apply { value = "00:00" }
     val isRecording = MutableLiveData<Boolean>().apply { value = false }
     val showWaveAnimation = MutableLiveData<Boolean>().apply { value = false }
 
@@ -39,11 +36,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     private var vocabList: List<Pair<String, String>> = emptyList()
     private var currentIndex: Int = 0
     private var speechRecognizer: SpeechRecognizer? = null
-    private var timer: Timer? = null
-    private var seconds: Int = 0
-
     private var recordedText: String = ""
-
 
     // Speech Recognition setup
     fun setupSpeechRecognizer(context: Context) {
@@ -57,33 +50,31 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     private fun createRecognitionListener(context: Context) = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {
             speechStatus.postValue(context.getString(R.string.listening))
-
             showWaveAnimation.postValue(true)
         }
 
         override fun onBeginningOfSpeech() {
             speechStatus.postValue(context.getString(R.string.speaking))
-
             showWaveAnimation.postValue(true)
-
         }
 
-        override fun onRmsChanged(rmsdB: Float) {}
+        override fun onRmsChanged(rmsdB: Float) {
+            showWaveAnimation.postValue(rmsdB > 0)
+        }
 
-        override fun onBufferReceived(buffer: ByteArray?) {}
+        override fun onBufferReceived(buffer: ByteArray?) {
+            // Không cần thay đổi trạng thái ở đây
+        }
 
         override fun onEndOfSpeech() {
-
-            stopTimer()
+            speechStatus.postValue(context.getString(R.string.processing))
             showWaveAnimation.postValue(false)
         }
 
         override fun onError(error: Int) {
-            stopTimer()
             showWaveAnimation.postValue(false)
             when (error) {
                 SpeechRecognizer.ERROR_NO_MATCH -> {
-                    // Nếu không nhận dạng được, vẫn hiển thị kết quả sai
                     val currentWord = currentFrontText.value?.lowercase()?.trim() ?: ""
                     speechStatus.postValue("❌ ${context.getString(R.string.wrong_pronunciation)}\n" +
                             "${context.getString(R.string.expected)}: $currentWord\n" +
@@ -96,14 +87,12 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
 
         override fun onResults(results: Bundle?) {
-            stopTimer()
             showWaveAnimation.postValue(false)
             results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let { matches ->
                 if (matches.isNotEmpty()) {
                     recordedText = matches[0]
                     checkPronunciation(recordedText, context)
                 } else {
-                    // Nếu không có kết quả, vẫn hiển thị kết quả sai
                     val currentWord = currentFrontText.value?.lowercase()?.trim() ?: ""
                     speechStatus.postValue("❌ ${context.getString(R.string.wrong_pronunciation)}\n" +
                             "${context.getString(R.string.expected)}: $currentWord\n" +
@@ -112,11 +101,18 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             }
         }
 
-        override fun onPartialResults(partialResults: Bundle?) {}
+        override fun onPartialResults(partialResults: Bundle?) {
+            if (speechStatus.value == context.getString(R.string.speaking)) {
+                partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.let { matches ->
+                    if (matches.isNotEmpty()) {
+                        speechStatus.postValue("${context.getString(R.string.speaking)}: ${matches[0]}")
+                    }
+                }
+            }
+        }
+
         override fun onEvent(eventType: Int, params: Bundle?) {}
     }
-
-    // Recording control
 
     fun toggleRecording(context: Context) {
         if (isRecording.value == true) {
@@ -138,7 +134,6 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     }
 
     internal fun startRecording(context: Context) {
-      
         if (!checkAudioPermission(context)) {
             speechStatus.postValue(context.getString(R.string.permission_required))
             return
@@ -149,7 +144,6 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             return
         }
 
-
         resetSpeechStatus()
         recordedText = ""
 
@@ -159,19 +153,20 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
         isRecording.value = true
         showWaveAnimation.value = true
-        startTimer()
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.speak_now))
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 3000)
+            putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 3000)
+            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         }
 
         try {
             speechRecognizer?.startListening(intent)
         } catch (e: Exception) {
             stopRecording()
-
             setupSpeechRecognizer(context)
         }
     }
@@ -182,54 +177,24 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         isRecording.value = false
         showWaveAnimation.value = false
-        stopTimer()
     }
 
-    // Timer functions
-    private fun startTimer() {
-        seconds = 0
-        recordingTime.postValue("00:00")
-        timer = Timer().apply {
-            scheduleAtFixedRate(object : TimerTask() {
-                override fun run() {
-                    seconds++
-                    val minutes = seconds / 60
-                    val secs = seconds % 60
-                    recordingTime.postValue(String.format("%02d:%02d", minutes, secs))
-                }
-            }, 1000, 1000)
-        }
-    }
-
-    private fun stopTimer() {
-        timer?.cancel()
-        timer = null
-        recordingTime.postValue("00:00")
-    }
-
-    // Pronunciation check
     private fun checkPronunciation(spokenText: String, context: Context) {
         val currentWord = currentFrontText.value?.lowercase()?.trim() ?: ""
         val userText = spokenText.lowercase().trim()
 
-        val result = if (userText.contains(currentWord)) {
-
-            stopTimer()
+        val result = if (userText == currentWord) {
             "✅ ${context.getString(R.string.correct_pronunciation)}"
         } else {
-            stopTimer()
             "❌ ${context.getString(R.string.wrong_pronunciation)}\n" +
                     "${context.getString(R.string.expected)}: $currentWord\n" +
                     "${context.getString(R.string.your_pronunciation)}: $userText"
         }
-
         speechStatus.postValue(result)
     }
 
-    // Permission check
     private fun checkAudioPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -237,12 +202,10 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-
     fun resetSpeechStatus() {
         speechStatus.postValue("")
     }
 
-    // Vocabulary card functions
     fun loadVocabFromFile() {
         viewModelScope.launch {
             mLoading.postValue(true)
@@ -295,19 +258,12 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     }
 
     fun flipCard() {
-        isCardFlipped.value = !(isCardFlipped.value ?: false)
+        isCardFlipped.value = !(isCardFlipped.value ?: true)
     }
 
     fun showNextCard() {
         if (vocabList.isNotEmpty()) {
-            // Reset tất cả trạng thái
-            stopRecording()
-            resetSpeechStatus()
-            recordingTime.value = "00:00"
-            isCardFlipped.value = true
-            showWaveAnimation.value = false
-            
-            // Chuyển đến từ tiếp theo
+            resetAllStates()
             currentIndex = (currentIndex + 1) % vocabList.size
             updateCardContent()
         }
@@ -315,18 +271,17 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     fun showPreviousCard() {
         if (vocabList.isNotEmpty()) {
-
-            // Reset tất cả trạng thái
-            stopRecording()
-            resetSpeechStatus()
-            recordingTime.value = "00:00"
-            isCardFlipped.value = true
-            showWaveAnimation.value = false
-            
-            // Chuyển đến từ trước đó
+            resetAllStates()
             currentIndex = (currentIndex - 1 + vocabList.size) % vocabList.size
             updateCardContent()
         }
+    }
+
+    private fun resetAllStates() {
+        stopRecording()
+        resetSpeechStatus()
+        isCardFlipped.value = true
+        showWaveAnimation.value = false
     }
 
     private fun updateCardContent() {
@@ -336,7 +291,6 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             currentFrontText.value = currentCard.first
             currentBackText.value = currentCard.second
             isCardFlipped.value = true
-
         }
     }
 
@@ -353,5 +307,4 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     companion object {
         const val PERMISSION_REQUEST_RECORD_AUDIO = 1001
     }
-} 
-
+}

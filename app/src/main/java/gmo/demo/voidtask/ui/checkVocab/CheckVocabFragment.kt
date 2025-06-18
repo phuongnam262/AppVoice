@@ -79,7 +79,9 @@ class CheckVocabFragment : BaseFragment<FragmentCheckVocabBinding, CheckVocabVie
                 mViewDataBinding?.tvFrontText?.visibility = View.GONE
                 mViewDataBinding?.tvBackText?.visibility = View.VISIBLE
             } else {
-                viewModel.speechStatus.postValue(getString(R.string.permission_required))
+                // Hiển thị mặt trước (tiếng Anh)
+                mViewDataBinding?.tvFrontText?.visibility = View.VISIBLE
+                mViewDataBinding?.tvBackText?.visibility = View.GONE
             }
         }
     }

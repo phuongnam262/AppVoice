@@ -69,20 +69,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cardVocab"/>
 
-        <!-- Recording Time -->
-
-        <TextView
-            android:id="@+id/tvRecordingTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.recordingTime}"
-            android:textSize="18sp"
-            android:textColor="@color/colorRed"
-            android:visibility="@{viewModel.showWaveAnimation ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@id/btnMic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
         <!-- Mic Button -->
         <ImageButton
             android:id="@+id/btnMic"

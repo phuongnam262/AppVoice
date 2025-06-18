@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">BaseSource</string>
 
-    <string name="network_error">Make sure you have an active data connection</string>
     <string name="close">Close</string>
 
     <string name="server_error">There is an error from server. Please try again</string>
@@ -56,5 +55,11 @@
     <!-- Navigation -->
     <string name="previous">Trước</string>
     <string name="next">Tiếp</string>
+    <string name="speech_timeout">Hết thời gian nói</string>
+    <string name="audio_error">Lỗi âm thanh</string>
+    <string name="network_error">Lỗi kết nối mạng</string>
+    <string name="network_timeout">Hết thời gian kết nối</string>
+    <string name="unknown_error">Lỗi không xác định</string>
+    <string name="processing">Đang xử lý...</string>
 
 </resources>
