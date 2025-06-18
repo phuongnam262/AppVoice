@@ -25,7 +25,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="Vocabulary Master"
+            android:text="@string/vocabulary_master"
+            android:textStyle="bold"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/sp_40"/>
 

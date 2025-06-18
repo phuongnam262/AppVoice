@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -8,7 +9,7 @@
             type="gmo.demo.voidtask.ui.addVocab.AddVocabViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -17,16 +18,30 @@
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment" />
+            android:text="@string/add_vocabulary"
+            android:textSize="@dimen/sp_30"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/dp_30"/>
 
         <Button
             android:id="@+id/btn_add_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Folder"
-            android:layout_marginTop="@dimen/dp_16" />
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_60"
+            android:text="@string/add_folder"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_20"
+            android:backgroundTint="@color/text_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

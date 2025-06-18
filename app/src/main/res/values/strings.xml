@@ -61,5 +61,12 @@
     <string name="network_timeout">Hết thời gian kết nối</string>
     <string name="unknown_error">Lỗi không xác định</string>
     <string name="processing">Đang xử lý...</string>
+    <string name="add_vocab">Add Vocab</string>
+    <string name="add_folder">Add Folder</string>
+    <string name="add_vocabulary">Add Vocabulary</string>
+    <string name="check_vocabulary">Check Vocabulary</string>
+    <string name="learn_vocabulary">Learn Vocabulary</string>
+    <string name="main_screen">Main Screen</string>
+    <string name="vocabulary_master">Vocabulary Master</string>
 
 </resources>
