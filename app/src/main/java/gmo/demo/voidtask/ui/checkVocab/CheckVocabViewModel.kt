@@ -59,7 +59,7 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
 
         override fun onRmsChanged(rmsdB: Float) {
-            showWaveAnimation.postValue(rmsdB > 0)
+            showWaveAnimation.postValue(true)
         }
 
         override fun onBufferReceived(buffer: ByteArray?) {
