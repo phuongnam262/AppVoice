@@ -28,6 +28,10 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             if (status == TextToSpeech.SUCCESS) {
                 // Set default language to English
                 textToSpeech?.setLanguage(Locale.US)
+                // Tự động phát âm từ đầu tiên sau khi khởi tạo thành công
+                if (currentFrontText.value != null) {
+                    speakCurrentWord()
+                }
             } else {
                 mMessage.postValue(R.string.tts_initialization_failed)
             }
@@ -71,13 +75,17 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             mLoading.postValue(true)
             try {
                 // Lấy tất cả các file từ database. Bạn có thể thêm logic chọn file cụ thể sau.
-                val allFiles = fileEntryDao.getAllFileEntries() // Giả định có hàm này trong DAO
+                val allFiles = fileEntryDao.getAllFileEntries()
                 if (allFiles.isNotEmpty()) {
-                    val latestFile = allFiles.last() // Lấy file mới nhất hoặc chọn theo logic khác
+                    val latestFile = allFiles.last() // Lấy file mới nhất
                     vocabList = parseFileContent(latestFile.fileContent, latestFile.fileName)
                     if (vocabList.isNotEmpty()) {
                         currentIndex = 0
                         updateCardContent()
+                        // Tự động phát âm từ đầu tiên sau khi tải xong
+                        if (textToSpeech != null) {
+                            speakCurrentWord()
+                        }
                     } else {
                         mMessage.postValue(R.string.no_vocab_found)
                     }
@@ -120,12 +128,15 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     fun flipCard() {
         isCardFlipped.value = !(isCardFlipped.value ?: false)
+        speakCurrentWord()
     }
 
     fun showNextCard() {
         if (vocabList.isNotEmpty()) {
             currentIndex = (currentIndex + 1) % vocabList.size
             updateCardContent()
+            // Đọc từ mới sau khi chuyển thẻ
+            speakCurrentWord()
         }
     }
 
@@ -133,6 +144,8 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         if (vocabList.isNotEmpty()) {
             currentIndex = (currentIndex - 1 + vocabList.size) % vocabList.size
             updateCardContent()
+            // Đọc từ mới sau khi chuyển thẻ
+            speakCurrentWord()
         }
     }
 
