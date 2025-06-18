@@ -67,7 +67,6 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
 
         override fun onEndOfSpeech() {
-            speechStatus.postValue(context.getString(R.string.processing))
             showWaveAnimation.postValue(false)
         }
 
