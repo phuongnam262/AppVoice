@@ -28,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/dp_30"/>
+            android:layout_marginTop="@dimen/dp_50"/>
 
         <Button
             android:id="@+id/btn_add_folder"
@@ -37,7 +37,6 @@
             android:text="@string/get_data_from_api"
             android:textStyle="bold"
             android:textSize="@dimen/sp_20"
-            android:backgroundTint="@color/text_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"

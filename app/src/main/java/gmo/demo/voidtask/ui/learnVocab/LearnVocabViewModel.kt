@@ -18,8 +18,9 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
     val currentFrontText = MutableLiveData<String>()
     val currentBackText = MutableLiveData<String>()
     val isCardFlipped = MutableLiveData<Boolean>().apply { value = false }
+    val currentPhienamText = MutableLiveData<String>()
 
-    private var vocabList: List<Pair<String, String>> = emptyList()
+    private var vocabList: List<Triple<String, String, String>> = emptyList()
     private var currentIndex: Int = 0
     private var textToSpeech: TextToSpeech? = null
 
@@ -100,8 +101,8 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
         }
     }
 
-    private fun parseFileContent(content: String, fileName: String): List<Pair<String, String>> {
-        val parsedVocab = mutableListOf<Pair<String, String>>()
+    private fun parseFileContent(content: String, fileName: String): List<Triple<String, String, String>> {
+        val parsedVocab = mutableListOf<Triple<String, String, String>>()
         if (fileName == "vocab_api.json") {
             try {
                 val jsonArray = JSONArray(content)
@@ -109,7 +110,8 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
                     val jsonObject = jsonArray.getJSONObject(i)
                     val front = jsonObject.getString("english")
                     val back = jsonObject.getString("vietnamese")
-                    parsedVocab.add(Pair(front, back))
+                    val phienam = jsonObject.optString("phienam", "")
+                    parsedVocab.add(Triple(front, back, phienam))
                 }
             } catch (e: JSONException) {
                 mMessage.postValue(R.string.error_parsing_json)
@@ -122,7 +124,7 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
                     val jsonObject = jsonArray.getJSONObject(i)
                     val front = jsonObject.getString("front")
                     val back = jsonObject.getString("back")
-                    parsedVocab.add(Pair(front, back))
+                    parsedVocab.add(Triple(front, back, ""))
                 }
             } catch (e: JSONException) {
                 mMessage.postValue(R.string.error_parsing_json)
@@ -130,9 +132,9 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             }
         } else { // Assume .txt or other plain text format
             content.lines().forEach { line ->
-                val parts = line.split("-", limit = 2) // Giả định định dạng "front - back"
+                val parts = line.split("-", limit = 2)
                 if (parts.size == 2) {
-                    parsedVocab.add(Pair(parts[0].trim(), parts[1].trim()))
+                    parsedVocab.add(Triple(parts[0].trim(), parts[1].trim(), ""))
                 }
             }
         }
@@ -167,6 +169,7 @@ class LearnVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             val currentCard = vocabList[currentIndex]
             currentFrontText.value = currentCard.first
             currentBackText.value = currentCard.second
+            currentPhienamText.value = currentCard.third
             isCardFlipped.value = false // Đặt lại trạng thái lật khi chuyển thẻ
         }
     }
