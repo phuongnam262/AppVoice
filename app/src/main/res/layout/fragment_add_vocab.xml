@@ -34,7 +34,7 @@
             android:id="@+id/btn_add_folder"
             android:layout_width="@dimen/dp_300"
             android:layout_height="@dimen/dp_60"
-            android:text="@string/add_folder"
+            android:text="@string/get_data_from_api"
             android:textStyle="bold"
             android:textSize="@dimen/sp_20"
             android:backgroundTint="@color/text_title"

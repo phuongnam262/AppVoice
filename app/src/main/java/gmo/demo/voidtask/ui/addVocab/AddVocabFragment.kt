@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import gmo.demo.voidtask.R
 import gmo.demo.voidtask.databinding.FragmentAddVocabBinding
-import android.content.Intent
-import android.app.Activity
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import android.util.Log
+import android.widget.Toast
 import gmo.demo.voidtask.ui.base.BaseFragment
 import gmo.demo.voidtask.BR
 import org.kodein.di.KodeinAware
@@ -42,17 +39,6 @@ class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel
         ViewModelProvider(this, factory)[AddVocabViewModel::class.java]
     }
 
-    private val pickFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val uri = it.data?.data
-            viewModel.onFileSelected(uri)
-            uri?.let { fileUri ->
-                val fileName = fileUri.lastPathSegment ?: "unknown_file"
-                mViewModel?.saveFileToDatabase(fileName, fileUri, requireContext().contentResolver)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -74,26 +60,11 @@ class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel
         // Gọi API lấy vocab khi vào màn hình
         mViewModel?.fetchVocabFromApiAndSave("KienTT-1836")
 
-        // Observe vocabList để log dữ liệu
-        mViewModel?.vocabList?.observe(viewLifecycleOwner) { list ->
-            Log.d("AddVocabFragment", "Vocab list: $list")
-            // TODO: Hiển thị dữ liệu ra UI nếu muốn
-        }
 
         mViewDataBinding?.btnAddFolder?.setOnClickListener {
-            val intent = mViewModel?.onAddFolderClicked()
-            intent?.let { pickFileLauncher.launch(it) }
+            Toast.makeText(requireContext(), "Dữ liệu API đã được nạp vào", Toast.LENGTH_SHORT).show()
         }
 
-        mViewModel?.selectedFileUri?.observe(viewLifecycleOwner) { uri ->
-            uri?.let {
-                Log.d("AddVocabFragment", "Selected file URI: $it")
-                // Ở đây bạn có thể thêm logic để đọc nội dung file từ URI
-                // Ví dụ:
-                // val content = requireContext().contentResolver.openInputStream(it)?.bufferedReader()?.use { reader -> reader.readText() }
-                // Log.d("AddVocabFragment", "File content: $content")
-            }
-        }
     }
 
     companion object {

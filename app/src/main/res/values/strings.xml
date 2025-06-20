@@ -68,5 +68,6 @@
     <string name="learn_vocabulary">Learn Vocabulary</string>
     <string name="main_screen">Main Screen</string>
     <string name="vocabulary_master">Vocabulary Master</string>
+    <string name="get_data_from_api">Get Data From API</string>
 
 </resources>
