@@ -67,7 +67,7 @@ class LockerApplication : Application(), KodeinAware {
         bind() from provider { HomeViewModelFactory() }
         bind() from provider { AddTaskViewModelFactory(instance()) }
         bind() from provider { MainScreenViewModelFactory() }
-        bind() from provider { AddVocabViewModelFactory(instance()) }
+        bind() from provider { AddVocabViewModelFactory(instance(), instance()) }
         bind() from provider { LearnVocabViewModelFactory(instance()) }
         bind() from provider { CheckVocabViewModelFactory(instance()) }
 

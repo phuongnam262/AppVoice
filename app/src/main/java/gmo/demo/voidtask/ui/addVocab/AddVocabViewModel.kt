@@ -13,10 +13,16 @@ import android.content.ContentResolver
 import android.util.Log
 import gmo.demo.voidtask.R
 import java.io.IOException
+import gmo.demo.voidtask.data.repositories.AppRepository
+import gmo.demo.voidtask.data.entities.responses.VocabResponse
+import androidx.lifecycle.LiveData
 
 class AddVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel() {
 
     val selectedFileUri = MutableLiveData<Uri>()
+    private val _vocabList = MutableLiveData<List<VocabResponse>>()
+    val vocabList: LiveData<List<VocabResponse>> = _vocabList
+    private var appRepository: AppRepository? = null
 
     fun onAddFolderClicked(): Intent {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -50,6 +56,25 @@ class AddVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel(
             } catch (e: Exception) {
                 Log.e("AddVocabViewModel", "Error saving file to database: ${e.message}")
                 mMessage.postValue(R.string.error_saving_file) // Giả định bạn có string resource này
+            }
+        }
+    }
+
+    fun setRepository(repository: AppRepository) {
+        appRepository = repository
+    }
+
+    fun fetchVocabFromApiAndSave(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = appRepository?.getVocabList(userId)
+                val list = response?.vocalist ?: emptyList()
+                _vocabList.postValue(list)
+                // Lưu vào DB
+                appRepository?.saveVocabListToDb(fileEntryDao, list)
+            } catch (e: Exception) {
+                Log.e("AddVocabViewModel", "Error fetching vocab: ${e.message}")
+                _vocabList.postValue(emptyList())
             }
         }
     }

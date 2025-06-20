@@ -71,6 +71,15 @@ class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Gọi API lấy vocab khi vào màn hình
+        mViewModel?.fetchVocabFromApiAndSave("KienTT-1836")
+
+        // Observe vocabList để log dữ liệu
+        mViewModel?.vocabList?.observe(viewLifecycleOwner) { list ->
+            Log.d("AddVocabFragment", "Vocab list: $list")
+            // TODO: Hiển thị dữ liệu ra UI nếu muốn
+        }
+
         mViewDataBinding?.btnAddFolder?.setOnClickListener {
             val intent = mViewModel?.onAddFolderClicked()
             intent?.let { pickFileLauncher.launch(it) }

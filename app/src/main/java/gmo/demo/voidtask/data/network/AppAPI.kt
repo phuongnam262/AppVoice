@@ -26,6 +26,7 @@ interface AppAPI {
                 .build()
 
             return Retrofit.Builder()
+                .baseUrl("https://script.google.com/")
                 .client(okkHttpclient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

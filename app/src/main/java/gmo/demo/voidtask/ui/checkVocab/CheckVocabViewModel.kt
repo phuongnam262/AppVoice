@@ -210,9 +210,9 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
             mLoading.postValue(true)
             try {
                 val allFiles = fileEntryDao.getAllFileEntries()
-                if (allFiles.isNotEmpty()) {
-                    val latestFile = allFiles.last()
-                    vocabList = parseFileContent(latestFile.fileContent, latestFile.fileName)
+                val vocabFile = allFiles.find { it.fileName == "vocab_api.json" } ?: allFiles.lastOrNull()
+                if (vocabFile != null) {
+                    vocabList = parseFileContent(vocabFile.fileContent, vocabFile.fileName)
                     if (vocabList.isNotEmpty()) {
                         currentIndex = 0
                         updateCardContent()
@@ -232,7 +232,20 @@ class CheckVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewMode
 
     private fun parseFileContent(content: String, fileName: String): List<Pair<String, String>> {
         val parsedVocab = mutableListOf<Pair<String, String>>()
-        if (fileName.endsWith(".json", ignoreCase = true)) {
+        if (fileName == "vocab_api.json") {
+            try {
+                val jsonArray = JSONArray(content)
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val front = jsonObject.getString("english")
+                    val back = jsonObject.getString("vietnamese")
+                    parsedVocab.add(Pair(front, back))
+                }
+            } catch (e: JSONException) {
+                mMessage.postValue(R.string.error_parsing_json)
+                e.printStackTrace()
+            }
+        } else if (fileName.endsWith(".json", ignoreCase = true)) {
             try {
                 val jsonArray = JSONArray(content)
                 for (i in 0 until jsonArray.length()) {
