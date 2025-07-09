@@ -7,8 +7,6 @@ import android.os.Process
 import gmo.demo.voidtask.data.db.AppDatabase
 import gmo.demo.voidtask.data.network.AppAPI
 import gmo.demo.voidtask.data.network.NetworkConnectionInterceptor
-import gmo.demo.voidtask.data.network.services.AppServives
-import gmo.demo.voidtask.data.repositories.AppRepository
 import gmo.demo.voidtask.data.repositories.TaskRepository
 import gmo.demo.voidtask.ui.addtask.AddTaskViewModelFactory
 import gmo.demo.voidtask.ui.home.HomeViewModelFactory
@@ -24,6 +22,8 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.provider
 import org.kodein.di.generic.singleton
+import gmo.demo.voidtask.data.repositories.AppRepository
+import gmo.demo.voidtask.data.network.AppServives
 
 class LockerApplication : Application(), KodeinAware {
 
@@ -56,11 +56,11 @@ class LockerApplication : Application(), KodeinAware {
         bind() from singleton { instance<AppDatabase>().getFileEntryDao() }
 
         //bind Service
+        bind() from singleton { TaskRepository(instance()) }
         bind() from provider { AppServives.create(instance()) }
 
         //bind Repository
         bind() from singleton { AppRepository(instance()) }
-        bind() from singleton { TaskRepository(instance()) }
 
         //bind Factory
         bind() from provider { SplashViewModelFactory() }
