@@ -3,12 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/addTaskFragment">
-    <fragment
-        android:id="@+id/addTaskFragment"
-        android:name="gmo.demo.voidtask.ui.addtask.AddTaskFragment"
-        android:label="fragment_add_task"
-        tools:layout="@layout/fragment_add_task" />
+    app:startDestination="@id/addVocabFragment">
     <fragment
         android:id="@+id/addVocabFragment"
         android:name="gmo.demo.voidtask.ui.addVocab.AddVocabFragment"

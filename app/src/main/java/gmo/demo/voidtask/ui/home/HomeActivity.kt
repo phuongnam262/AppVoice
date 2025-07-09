@@ -54,7 +54,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HomeLis
 
         intent.extras?.getString("navigateToFragment")?.let { fragmentId ->
             val navOptions = androidx.navigation.navOptions {
-                popUpTo(R.id.addTaskFragment) {
+                popUpTo(R.id.addVocabFragment) {
                     inclusive = true
                 }
             }

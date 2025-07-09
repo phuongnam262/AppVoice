@@ -8,7 +8,6 @@ import gmo.demo.voidtask.data.db.AppDatabase
 import gmo.demo.voidtask.data.network.AppAPI
 import gmo.demo.voidtask.data.network.NetworkConnectionInterceptor
 import gmo.demo.voidtask.data.repositories.TaskRepository
-import gmo.demo.voidtask.ui.addtask.AddTaskViewModelFactory
 import gmo.demo.voidtask.ui.home.HomeViewModelFactory
 import gmo.demo.voidtask.ui.main.MainScreenViewModelFactory
 import gmo.demo.voidtask.ui.splash.SplashViewModelFactory
@@ -65,7 +64,6 @@ class LockerApplication : Application(), KodeinAware {
         //bind Factory
         bind() from provider { SplashViewModelFactory() }
         bind() from provider { HomeViewModelFactory() }
-        bind() from provider { AddTaskViewModelFactory(instance()) }
         bind() from provider { MainScreenViewModelFactory() }
         bind() from provider { AddVocabViewModelFactory(instance(), instance()) }
         bind() from provider { LearnVocabViewModelFactory(instance()) }
