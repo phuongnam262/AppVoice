@@ -26,7 +26,7 @@ interface AppAPI {
                 .build()
 
             return Retrofit.Builder()
-                .baseUrl("https://script.google.com/")
+                .baseUrl("https://learnvocab.free.beeceptor.com/")
                 .client(okkHttpclient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

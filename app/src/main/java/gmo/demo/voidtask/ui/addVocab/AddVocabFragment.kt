@@ -58,7 +58,7 @@ class AddVocabFragment : BaseFragment<FragmentAddVocabBinding, AddVocabViewModel
         super.onViewCreated(view, savedInstanceState)
 
         // Gọi API lấy vocab khi vào màn hình
-        mViewModel?.fetchVocabFromApiAndSave("KienTT-1836")
+        mViewModel?.fetchVocabFromApiAndSave()
 
 
         mViewDataBinding?.btnAddFolder?.setOnClickListener {

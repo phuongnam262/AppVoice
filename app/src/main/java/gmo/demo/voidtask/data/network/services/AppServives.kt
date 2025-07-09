@@ -1,10 +1,9 @@
-package gmo.demo.voidtask.data.network
+package gmo.demo.voidtask.data.network.services
 
 import gmo.demo.voidtask.data.entities.responses.VocabListRawResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
-import retrofit2.http.Path
 
 interface AppServives {
     @GET("/")

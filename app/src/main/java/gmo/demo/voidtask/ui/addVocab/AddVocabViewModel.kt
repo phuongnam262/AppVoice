@@ -18,10 +18,10 @@ class AddVocabViewModel(private val fileEntryDao: FileEntryDao) : BaseViewModel(
         appRepository = repository
     }
 
-    fun fetchVocabFromApiAndSave(userId: String) {
+    fun fetchVocabFromApiAndSave() {
         viewModelScope.launch {
             try {
-                val response = appRepository?.getVocabList(userId)
+                val response = appRepository?.getVocabList()
                 val list = response?.vocalist ?: emptyList()
                 _vocabList.postValue(list)
                 // Lưu vào DB
